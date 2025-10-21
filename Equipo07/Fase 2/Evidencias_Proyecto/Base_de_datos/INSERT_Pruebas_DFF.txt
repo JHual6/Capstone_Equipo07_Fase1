@@ -262,7 +262,7 @@ VALUES
 INSERT INTO Tipo_Detalle(id_tipdet, nombre_tipdet, desc_tipdet)
 VALUES
 (1, 'Principal', 'La flor principal de los arreglos es la más llamativa o la que se encuentra en mayor cantidad'),
-(2, 'Segundaria', 'La flor segundaria de los arreglos son la segunda más llamativa o la segunda que se encuentra en mayor cantidad'),
+(2, 'Secundaria', 'La flor segundaria de los arreglos son la segunda más llamativa o la segunda que se encuentra en mayor cantidad'),
 (3, 'Complementario', 'Las flores complementarias son las otras flores que llevan los arreglos, tales como flores acompañantes');
 
 -- Detalle Arreglo
