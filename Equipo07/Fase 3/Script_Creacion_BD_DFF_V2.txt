@@ -1,0 +1,190 @@
+CREATE TABLE Clientes(
+	id_cli SERIAL PRIMARY KEY,
+	nombre_cli VARCHAR(100) NOT NULL,
+	apellido_cli VARCHAR(100) NOT NULL,
+	correo_cli VARCHAR(100) UNIQUE NOT NULL,
+	numero_cli INT,
+	direccion_cli VARCHAR(250),
+	descuento_cli INT DEFAULT 0
+);
+CREATE TABLE Clima(
+	id_clima SERIAL PRIMARY KEY,
+	fecha_clima DATE NOT NULL DEFAULT CURRENT_DATE,
+	hora_clima TIME NOT NULL DEFAULT CURRENT_TIME,
+	lluvia_clima BOOLEAN NOT NULL,
+	temperatura_clima DECIMAL(5,2) NOT NULL,
+	humedad_clima DECIMAL(5,2) NOT NULL,
+	desc_clima VARCHAR(250)
+);
+CREATE TABLE Tipo_Pago(
+	id_tipag SERIAL PRIMARY KEY,
+	nombre_tipag VARCHAR(100) NOT NULL
+);
+CREATE TABLE Categoria_Arreglo(
+	id_catarr SERIAL PRIMARY KEY,
+	nombre_catarr VARCHAR(100) NOT NULL,
+	desc_catarr VARCHAR(250),
+	alto_catarr INT NOT NULL,
+	ancho_catarr INT NOT NULL
+);
+CREATE TABLE Categoria_Extra(
+	id_catext SERIAL PRIMARY KEY,
+	nombre_catext VARCHAR(100) NOT NULL,
+	desc_catext VARCHAR(250)
+);
+CREATE TABLE Categoria_Merma(
+	id_catmer SERIAL PRIMARY KEY,
+	nombre_catmer VARCHAR(100) NOT NULL,
+	desc_catmer VARCHAR(250)
+);
+CREATE TABLE Lote(
+	id_lote SERIAL PRIMARY KEY,
+	nombre_lote VARCHAR(100) NOT NULL,
+	fecha_lote DATE NOT NULL DEFAULT CURRENT_DATE,
+	color_lote VARCHAR(100) NOT NULL
+);
+CREATE TABLE Proveedor(
+	id_prov SERIAL PRIMARY KEY,
+	nombre_prov VARCHAR(100) NOT NULL,
+	numero_prov INT NOT NULL,
+	direccion_prov VARCHAR(250) NOT NULL
+);
+CREATE TABLE Categoria_Flores(
+	id_catflo SERIAL PRIMARY KEY,
+	nombre_catflo VARCHAR(100) NOT NULL,
+	desc_catflo VARCHAR(250)
+);
+CREATE TABLE Extras(
+	id_ext SERIAL PRIMARY KEY,
+	nombre_ext VARCHAR(100) NOT NULL,
+	desc_ext VARCHAR(250),
+	foto_ext VARCHAR(250) NOT NULL,
+	disponible_ext BOOLEAN NOT NULL,
+	precio_ext INT NOT NULL,
+	cantidad_ext INT NOT NULL,
+	cod_barras_ext VARCHAR(20),
+	id_catext INT NOT NULL,
+	FOREIGN KEY (id_catext) REFERENCES Categoria_Extra(id_catext)
+);
+CREATE TABLE Flores(
+	id_flor SERIAL PRIMARY KEY,
+	nombre_flor VARCHAR(100) NOT NULL,
+	desc_flor VARCHAR(250),
+	foto_flor VARCHAR(250) NOT NULL,
+	disponible_flor BOOLEAN NOT NULL,
+	color_flor VARCHAR(100) NOT NULL,
+	duracion_flor INT,
+	precio_flor INT NOT NULL,
+	cod_barras_flor VARCHAR(20) NOT NULL,
+	id_catflo INT NOT NULL,
+	FOREIGN KEY (id_catflo) REFERENCES Categoria_Flores(id_catflo)
+);
+CREATE TABLE Arreglos(
+	id_arr SERIAL PRIMARY KEY,
+	nombre_arr VARCHAR(100) NOT NULL,
+	desc_arr VARCHAR(250),
+	foto_arr VARCHAR(250) NOT NULL,
+	disponible_arr BOOLEAN NOT NULL, 
+	precio_arr INT NOT NULL,
+	cantidad_arr INT NOT NULL,
+	id_catarr INT NOT NULL,
+	FOREIGN KEY (id_catarr) REFERENCES Categoria_Arreglo(id_catarr)
+);
+CREATE TABLE Compras(
+	id_comp SERIAL PRIMARY KEY,
+	fecha_comp DATE NOT NULL DEFAULT CURRENT_DATE,
+	cantidad_comp INT NOT NULL,
+	precio_comp INT NOT NULL,
+	color_lote_comp VARCHAR(100) NOT NULL,
+	id_prov INT NOT NULL,
+	FOREIGN KEY (id_prov) REFERENCES Proveedor(id_prov)
+);
+CREATE TABLE Detalle_Compras(
+	id_detcom SERIAL PRIMARY KEY,
+	cant_paq_flores_detcom INT NOT NULL,
+	cant_paq_detcom INT NOT NULL,
+	cant_paq_defecto_detcom INT NOT NULL,
+	precio_paq_detcom INT NOT NULL,
+	id_flor INT NOT NULL,
+	id_comp INT NOT NULL,
+	FOREIGN KEY (id_flor) REFERENCES Flores(id_flor),
+	FOREIGN KEY (id_comp) REFERENCES Compras(id_comp)
+);
+CREATE TABLE Detalle_Lote(
+	id_detlote SERIAL PRIMARY KEY,
+	stock_detlote INT NOT NULL,
+	ventas_detlote INT NOT NULL,
+	farreglo_detlote INT NOT NULL,
+	disp_detlote BOOLEAN NOT NULL,
+	preciou_detlote INT NOT NULL,
+	id_flor INT NOT NULL,
+	id_lote INT NOT NULL,
+	FOREIGN KEY (id_flor) REFERENCES Flores(id_flor),
+	FOREIGN KEY (id_lote) REFERENCES Lote(id_lote)
+);
+CREATE TABLE Tipo_Detalle(
+	id_tipdet SERIAL PRIMARY KEY,
+	nombre_tipdet VARCHAR(100) NOT NULL,
+	desc_tipdet VARCHAR(250) NOT NULL
+);
+CREATE TABLE Detalle_arreglo(
+	id_detarr SERIAL PRIMARY KEY,
+	cant_detarr INT NOT NULL,
+	id_tipdet INT NOT NULL,
+	id_flor INT NOT NULL,
+	id_arr INT NOT NULL,
+	FOREIGN KEY (id_flor) REFERENCES Flores(id_flor),
+	FOREIGN KEY (id_arr) REFERENCES Arreglos(id_arr)
+);
+CREATE TABLE Merma(
+	id_mer SERIAL PRIMARY KEY,
+	fecha_mer DATE NOT NULL DEFAULT CURRENT_DATE,
+	cantidad_mer INT NOT NULL,
+	precio_mer INT NOT NULL,
+	id_catmer INT NOT NULL,
+	id_detlote INT NOT NULL,
+	FOREIGN KEY (id_catmer) REFERENCES Categoria_Merma(id_catmer),
+	FOREIGN KEY (id_detlote) REFERENCES Detalle_Lote(id_detlote)
+);
+CREATE TABLE Producto(
+	id_prod SERIAL PRIMARY KEY,
+	nomb_prod VARCHAR(100) NOT NULL,
+	cat_prod VARCHAR(100) NOT NULL,
+	id_flor INT NOT NULL,
+	id_ext INT NOT NULL,
+	id_arr INT NOT NULL,
+	FOREIGN KEY (id_flor) REFERENCES Flores(id_flor),
+	FOREIGN KEY (id_ext) REFERENCES Extras(id_ext),	
+	FOREIGN KEY (id_arr) REFERENCES Arreglos(id_arr)	
+);
+CREATE TABLE Ventas(
+	id_ven SERIAL PRIMARY KEY,
+	fecha_ven DATE NOT NULL DEFAULT CURRENT_DATE,
+	hora_ven TIME NOT NULL DEFAULT CURRENT_TIME,
+	cantidad_ven INT NOT NULL,
+	total_ven INT NOT NULL,
+	descuento_ven INT NOT NULL DEFAULT 0,
+	boleta_ven VARCHAR(250) NOT NULL,
+	desc_ven VARCHAR(250),
+	id_cli INT NOT NULL,
+    	id_clima INT NOT NULL,
+    	id_tipag INT NOT NULL,
+	FOREIGN KEY (id_cli) REFERENCES Clientes(id_cli),
+	FOREIGN KEY (id_clima) REFERENCES Clima(id_clima),
+	FOREIGN KEY (id_tipag) REFERENCES Tipo_Pago(id_tipag)
+);
+CREATE TABLE Detalle_Ventas(
+	id_detven SERIAL PRIMARY KEY,
+	cant_detven INT NOT NULL,
+	preciou_detven INT NOT NULL,
+	precio_detven INT NOT NULL,
+	id_prod INT NOT NULL,
+	id_ven INT NOT NULL,
+	FOREIGN KEY (id_prod) REFERENCES Producto(id_prod),
+	FOREIGN KEY (id_ven) REFERENCES Ventas(id_ven)
+);
+CREATE TABLE Velorios(
+	id_velorio SERIAL PRIMARY KEY,
+	fecha_velorio DATE UNIQUE DEFAULT CURRENT_DATE,
+	cantidad_velorio INT DEFAULT 0
+);
