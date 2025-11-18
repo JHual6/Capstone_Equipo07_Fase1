@@ -1,0 +1,11 @@
+/*
+ PASO 1: Crear la tabla TEMPORAL para datos históricos
+ (Esta tabla morirá al cerrar la sesión)
+*/
+CREATE TEMPORARY TABLE IF NOT EXISTS temp_ventas_historicas (
+    fecha DATE PRIMARY KEY,
+    total_venta INT NOT NULL
+);
+
+-- Vaciarla por si ya existía
+TRUNCATE TABLE temp_ventas_historicas;

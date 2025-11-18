@@ -1,0 +1,117 @@
+/* SCRIPT B - VERSIÓN 4 (RANGOS DINÁMICOS Y ORGÁNICOS)
+   Objetivo: Eliminar el comportamiento "cuadrado" y generar dispersión real.
+*/
+
+CREATE OR REPLACE FUNCTION generar_objetivos_inteligentes(fecha_inicio DATE, fecha_fin DATE)
+RETURNS VOID AS $$
+DECLARE
+    dia_actual DATE := fecha_inicio;
+    
+    -- Variables de Lógica
+    dia_semana INT;
+    
+    -- Variables de Rango (Dinámicos)
+    rango_min INT;
+    rango_max INT;
+    meta_final INT;
+    
+    -- Variables Velorio
+    hay_velorio BOOLEAN;
+    monto_velorio INT;
+    
+    -- Variables Clima
+    v_lluvia BOOLEAN;
+    v_desc TEXT;
+    v_temp DECIMAL(5,2);
+    
+BEGIN
+    -- 1. Preparar tablas (Temporal y Velorios)
+    CREATE TEMPORARY TABLE IF NOT EXISTS temp_ventas_totales (
+        fecha_dia DATE PRIMARY KEY,
+        total_venta_estimado INT NOT NULL
+    );
+    TRUNCATE TABLE temp_ventas_totales;
+    TRUNCATE TABLE Velorios RESTART IDENTITY CASCADE;
+
+    -- 2. BUCLE PRINCIPAL
+    WHILE dia_actual <= fecha_fin LOOP
+        dia_semana := EXTRACT(DOW FROM dia_actual); -- 0=Dom, 1=Lun...
+        
+        -- A. DEFINIR RANGO BASE SEGÚN DÍA (Sin Clima aún)
+        IF dia_semana BETWEEN 1 AND 4 THEN 
+            -- Lunes a Jueves (Días lentos)
+            -- Rango amplio: A veces no entra nadie (5k), a veces va bien (50k)
+            rango_min := 5000;   
+            rango_max := 55000;  
+            
+        ELSIF dia_semana = 5 THEN 
+            -- Viernes (Mejora un poco)
+            rango_min := 30000;
+            rango_max := 90000;
+            
+        ELSE 
+            -- Sábado y Domingo (Días Fuertes)
+            -- Base alta, techo muy alto
+            rango_min := 80000;
+            rango_max := 240000;
+        END IF;
+
+        -- B. CONSULTAR CLIMA REAL
+        SELECT lluvia_clima, desc_clima, temperatura_clima INTO v_lluvia, v_desc, v_temp
+        FROM Clima WHERE fecha_clima = dia_actual AND hora_clima >= '12:00:00' LIMIT 1;
+
+        -- C. MODIFICAR LOS RANGOS SEGÚN EL CLIMA (Aquí está la magia del ML)
+        
+        IF v_lluvia THEN
+            -- Si llueve, el techo de venta se desploma, el piso baja al mínimo
+            -- Ejemplo Sábado Lluvia: Max baja de 240k a 120k. Min baja a 20k.
+            rango_max := (rango_max * 0.5)::INT; 
+            rango_min := (rango_min * 0.4)::INT;
+            
+            -- Si es lunes-jueves y llueve, el piso puede ser 0 (nadie entra)
+            IF dia_semana BETWEEN 1 AND 4 THEN
+                rango_min := 0;
+            END IF;
+            
+        ELSIF v_desc LIKE '%VIENTO FUERTE%' THEN
+            -- El viento espanta compradores de arreglos grandes -> Baja el Max
+            rango_max := (rango_max * 0.7)::INT;
+            -- El min se mantiene igual (la gente compra cosas chicas igual)
+            
+        ELSIF v_temp > 25 THEN
+            -- Días muy calurosos a veces aumentan paseo, subimos un poco el max
+            rango_max := (rango_max * 1.1)::INT;
+        END IF;
+
+        -- Seguridad: Que el min nunca sea mayor al max (por si acaso)
+        IF rango_min > rango_max THEN rango_max := rango_min + 1000; END IF;
+
+        -- D. CALCULAR META FINAL (ALEATORIEDAD DENTRO DEL RANGO)
+        -- Generamos un número al azar entre el Rango Min y el Rango Max calculado
+        meta_final := rango_min + floor(random() * (rango_max - rango_min));
+
+        -- E. VELORIOS (Factor Exógeno "Salva el día")
+        -- 25% de probabilidad aprox
+        hay_velorio := (random() < 0.25); 
+        
+        IF hay_velorio THEN
+            -- El velorio añade una venta garantizada INDEPENDIENTE del rango anterior
+            monto_velorio := 35000 + floor(random() * 70000); 
+            meta_final := meta_final + monto_velorio; 
+            
+            INSERT INTO Velorios (fecha_velorio, cantidad_velorio) VALUES (dia_actual, 1);
+        ELSE
+             INSERT INTO Velorios (fecha_velorio, cantidad_velorio) VALUES (dia_actual, 0);
+        END IF;
+
+        -- F. GUARDAR
+        INSERT INTO temp_ventas_totales (fecha_dia, total_venta_estimado)
+        VALUES (dia_actual, meta_final);
+
+        dia_actual := dia_actual + 1;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+-- EJECUTAR EL GENERADOR DE RANGOS
+SELECT generar_objetivos_inteligentes('2023-02-01', '2024-12-31');

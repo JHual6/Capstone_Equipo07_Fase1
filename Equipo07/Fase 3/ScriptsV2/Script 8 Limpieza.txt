@@ -1,0 +1,5 @@
+/*
+ PASO 8: Script de borrado (Opcional)
+*/
+DROP TABLE IF EXISTS temp_ventas_historicas;
+DROP TABLE IF EXISTS temp_ventas_totales;
