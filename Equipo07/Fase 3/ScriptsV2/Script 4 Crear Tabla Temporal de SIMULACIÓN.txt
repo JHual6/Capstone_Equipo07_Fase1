@@ -1,8 +1,0 @@
-/* PASO 4: Crear la tabla temporal para la simulación 2023-2024
-*/
-CREATE TEMPORARY TABLE IF NOT EXISTS temp_ventas_totales (
-    fecha_dia DATE PRIMARY KEY,
-    total_venta_estimado INT NOT NULL
-);
--- Vaciarla por si ya existía en esta sesión
-TRUNCATE TABLE temp_ventas_totales;

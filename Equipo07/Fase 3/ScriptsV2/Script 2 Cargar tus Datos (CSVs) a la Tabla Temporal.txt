@@ -1,6 +1,0 @@
-/*
- PASO 2: Cargar el archivo .csv ÚNICO, CONSOLIDADO y RELLENO
-*/
-COPY temp_ventas_historicas(fecha, total_venta) 
-FROM 'C:\Users\jotas\Desktop\ScriptsV2\historico_consolidado_COMPLETO.csv'
-DELIMITER ',' CSV HEADER;
