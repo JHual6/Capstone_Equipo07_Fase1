@@ -1,0 +1,72 @@
+/* SCRIPT 3: CARGAR CLIMA REAL (CORREGIDO CON HORARIOS)
+   Filtra: 10:00-17:00 (Normal) y 09:00-21:00 (Fechas Peak)
+*/
+
+-- 1. Limpiar tabla Clima actual
+TRUNCATE TABLE Clima RESTART IDENTITY CASCADE;
+
+-- 2. Crear tabla temporal (igual que antes)
+CREATE TEMPORARY TABLE temp_clima_import (
+    fecha_clima DATE,
+    hora_clima TIME,
+    lluvia_clima BOOLEAN,
+    temperatura_clima DECIMAL(5,2),
+    humedad_clima DECIMAL(5,2),
+    desc_clima VARCHAR(250),
+    viento_kmh DECIMAL(5,2)
+);
+
+-- 3. IMPORTAR CSV COMPLETO (Usa tu misma ruta)
+COPY temp_clima_import(
+    fecha_clima,
+    hora_clima,
+    lluvia_clima,
+    temperatura_clima,
+    humedad_clima,
+    desc_clima,
+    viento_kmh
+)
+FROM 'C:\\Users\\jotas\\Desktop\\ScriptsV2\\clima_real_puerto_montt.csv'
+DELIMITER ',' CSV HEADER;
+
+-- 4. INSERTAR FILTRANDO HORARIOS
+INSERT INTO Clima (
+    fecha_clima,
+    hora_clima,
+    lluvia_clima,
+    temperatura_clima,
+    humedad_clima,
+    desc_clima
+)
+SELECT 
+    fecha_clima, 
+    hora_clima, 
+    lluvia_clima, 
+    temperatura_clima, 
+    humedad_clima, 
+    CASE 
+        WHEN viento_kmh > 25 THEN desc_clima || ' - VIENTO FUERTE'
+        ELSE desc_clima
+    END
+FROM temp_clima_import
+WHERE
+    -- CONDICIÓN 1: DÍAS PEAK (09:00 a 21:00)
+    (
+        TO_CHAR(fecha_clima, 'MM-DD') IN ('02-14', '05-10', '09-21', '11-01', '11-02') 
+        AND hora_clima >= '09:00:00'
+        AND hora_clima <= '21:00:00'
+    )
+    OR
+    -- CONDICIÓN 2: DÍAS NORMALES (10:00 a 17:00)
+    (
+        TO_CHAR(fecha_clima, 'MM-DD') NOT IN ('02-14', '05-10', '09-21', '11-01', '11-02')
+        AND hora_clima >= '10:00:00'
+        AND hora_clima <= '17:00:00'
+    );
+
+-- Limpieza
+DROP TABLE temp_clima_import;
+
+-- Chequeo rápido
+SELECT 'Clima Cargado Correctamente. Filas: ' || COUNT(*) AS estado
+FROM Clima;

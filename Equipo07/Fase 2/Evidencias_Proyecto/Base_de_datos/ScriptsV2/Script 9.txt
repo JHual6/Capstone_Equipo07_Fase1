@@ -1,0 +1,32 @@
+/* CONSULTA FINAL: VISTA MAESTRA PARA MACHINE LEARNING
+   Consulta que une Ventas, Clima y Velorios, agregando por día.
+*/
+
+SELECT 
+    -- 1. VARIABLES DE FECHA Y DÍA
+    v.fecha_ven AS fecha,
+    EXTRACT(DOW FROM v.fecha_ven) AS dia_semana_num,
+    EXTRACT(MONTH FROM v.fecha_ven) AS mes,
+    
+    -- 2. VARIABLES DE VELORIO (Exógenas)
+    COALESCE(vel.cantidad_velorio, 0) AS cantidad_velorios_dia,
+    CASE WHEN vel.cantidad_velorio > 0 THEN 1 ELSE 0 END AS hubo_velorio,
+
+    -- 3. VARIABLES DE CLIMA (Ambientales)
+    ROUND(AVG(c.temperatura_clima), 1) AS temp_promedio_dia,
+    BOOL_OR(c.lluvia_clima)::INT AS fue_dia_lluvioso, 
+    CASE WHEN STRING_AGG(c.desc_clima, ' ') LIKE '%VIENTO FUERTE%' THEN 1 ELSE 0 END AS hubo_viento_fuerte,
+
+    -- 4. TARGETS (Lo que quieres predecir)
+    COUNT(v.id_ven) AS numero_de_ventas_dia, 
+    SUM(v.total_ven) AS monto_total_ventas 
+
+FROM Ventas v
+JOIN Clima c ON v.fecha_ven = c.fecha_clima
+LEFT JOIN Velorios vel ON v.fecha_ven = vel.fecha_velorio
+
+GROUP BY 
+    v.fecha_ven, 
+    vel.cantidad_velorio
+ORDER BY 
+    v.fecha_ven ASC;

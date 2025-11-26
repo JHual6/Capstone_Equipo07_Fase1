@@ -1,0 +1,400 @@
+/* SCRIPT 6: MOTOR DE SIMULACIÓN COMPLETO
+   - Usa:
+       * temp_ventas_totales (Script 5)
+       * Clima, Velorios
+       * Producto, Clientes, Tipo_Pago
+       * Compras, Detalle_Compras
+       * Lote, Detalle_Lote
+       * Merma
+*/
+
+CREATE OR REPLACE FUNCTION simular_negocio_realista(fecha_inicio DATE, fecha_fin DATE)
+RETURNS VOID AS $$
+DECLARE
+    dia_actual          DATE := fecha_inicio;
+
+    -- Meta diaria y avance
+    v_meta_diaria       INT;
+    v_vendido_hoy       INT;
+
+    -- Producto / venta
+    v_producto_id       INT;
+    v_precio_prod       INT;
+    v_id_nueva_venta    INT;
+
+    -- Clima / horario
+    v_clima_id          INT;
+    v_desc_clima        TEXT;
+    v_es_viento_fuerte  BOOLEAN;
+    v_hora_apertura     TIME;
+    v_hora_cierre       TIME;
+    v_hora_venta        TIME;
+
+    -- Cliente y tipo de pago
+    v_cli_id            INT;
+    v_tipag_id          INT;
+
+    -- Compras / stock
+    es_martes           BOOLEAN;
+    ventas_semana_ant   INT;
+    monto_compra        INT;
+    v_id_compra         INT;
+    v_id_lote           INT;
+    v_flor_id           INT;
+    v_cant_paq          INT;
+    v_cant_flores_paq   INT;
+    v_precio_paq        INT;
+    v_stock             INT;
+    v_precio_unit       INT;
+
+    -- Stock por flor al vender
+    v_id_flor_prod      INT;
+    v_id_detlote        INT;
+
+    -- Merma
+    v_detlote_id        INT;
+    v_stock_restante    INT;
+    v_precio_unit_merma INT;
+BEGIN
+    ------------------------------------------------------------------
+    -- CHEQUEOS BÁSICOS
+    ------------------------------------------------------------------
+    IF NOT EXISTS (SELECT 1 FROM Producto) THEN
+        RAISE EXCEPTION 'La tabla Producto está vacía. Carga productos antes de simular.';
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM Clientes) THEN
+        RAISE EXCEPTION 'La tabla Clientes está vacía. Carga al menos un cliente antes de simular.';
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM Tipo_Pago) THEN
+        RAISE EXCEPTION 'La tabla Tipo_Pago está vacía. Carga al menos un tipo de pago antes de simular.';
+    END IF;
+
+    -- Cliente y tipo de pago que usaremos para todas las ventas simuladas
+    SELECT id_cli
+    INTO   v_cli_id
+    FROM   Clientes
+    ORDER BY id_cli
+    LIMIT 1;
+
+    SELECT id_tipag
+    INTO   v_tipag_id
+    FROM   Tipo_Pago
+    ORDER BY id_tipag
+    LIMIT 1;
+
+    ------------------------------------------------------------------
+    -- BUCLE PRINCIPAL POR DÍA
+    ------------------------------------------------------------------
+    WHILE dia_actual <= fecha_fin LOOP
+
+        --------------------------------------------------------------
+        -- 1) HORARIO DE APERTURA / CIERRE DESDE CLIMA
+        --------------------------------------------------------------
+        SELECT MIN(hora_clima), MAX(hora_clima)
+        INTO   v_hora_apertura, v_hora_cierre
+        FROM   Clima
+        WHERE  fecha_clima = dia_actual;
+
+        -- Si no hay clima, no abrimos ese día
+        IF v_hora_apertura IS NULL THEN
+            dia_actual := dia_actual + 1;
+            CONTINUE;
+        END IF;
+
+        --------------------------------------------------------------
+        -- 2) COMPRAS LOS MARTES (GENERAN LOTE + DETALLE_LOTE)
+        --------------------------------------------------------------
+        es_martes := (EXTRACT(DOW FROM dia_actual) = 2); -- 2 = martes
+
+        IF es_martes THEN
+            -- Ventas de la semana anterior
+            SELECT COALESCE(SUM(total_ven), 0)
+            INTO   ventas_semana_ant
+            FROM   Ventas
+            WHERE  fecha_ven BETWEEN dia_actual - 7 AND dia_actual - 1;
+
+            -- Monto base de compra (mínimo para tener algo de stock)
+            IF ventas_semana_ant < 50000 THEN
+                monto_compra := 80000;
+            ELSE
+                monto_compra := (ventas_semana_ant * 1.1)::INT;
+            END IF;
+
+            -- Factor extra cerca de fechas peak (San Valentín / Día Madre / Todos Santos)
+            IF (EXTRACT(MONTH FROM dia_actual) = 2 AND EXTRACT(DAY FROM dia_actual) < 14) OR
+               (EXTRACT(MONTH FROM dia_actual) = 5 AND EXTRACT(DAY FROM dia_actual) <= 10) OR
+               (EXTRACT(MONTH FROM dia_actual) = 10 AND EXTRACT(DAY FROM dia_actual) >= 25)
+            THEN
+                monto_compra := (monto_compra * 3)::INT;
+            END IF;
+
+            -- Insertar COMPRA (Proveedor 1: Florería Don Luis)
+            INSERT INTO Compras(fecha_comp, cantidad_comp, precio_comp, color_lote_comp, id_prov)
+            VALUES (dia_actual, 10, monto_compra, 'Mix', 1)
+            RETURNING id_comp INTO v_id_compra;
+
+            -- Crear LOTE asociado a esa compra (aunque no haya FK, lo relacionamos por sentido)
+            INSERT INTO Lote(nombre_lote, fecha_lote, color_lote)
+            VALUES ('Lote del ' || TO_CHAR(dia_actual, 'DD-MM-YYYY'), dia_actual, 'Mix')
+            RETURNING id_lote INTO v_id_lote;
+
+            -- Crear DETALLE_COMPRAS + DETALLE_LOTE para algunas flores
+            -- (tomamos hasta 8 flores distintas para repartir el stock)
+            FOR v_flor_id IN
+                SELECT id_flor
+                FROM   Flores
+                ORDER  BY id_flor
+                LIMIT  8
+            LOOP
+                v_cant_paq        := 5 + FLOOR(random() * 6); -- 5 a 10 paquetes
+                v_cant_flores_paq := 10;                      -- 10 tallos por paquete
+                v_precio_paq      := GREATEST(8000, monto_compra / 10); -- aprox por paquete
+
+                INSERT INTO Detalle_Compras(
+                    cant_paq_flores_detcom,
+                    cant_paq_detcom,
+                    cant_paq_defecto_detcom,
+                    precio_paq_detcom,
+                    id_flor,
+                    id_comp
+                )
+                VALUES (
+                    v_cant_flores_paq,
+                    v_cant_paq,
+                    0,
+                    v_precio_paq,
+                    v_flor_id,
+                    v_id_compra
+                );
+
+                v_stock      := v_cant_paq * v_cant_flores_paq;
+                v_precio_unit := GREATEST(500, v_precio_paq / v_cant_flores_paq);
+
+                INSERT INTO Detalle_Lote(
+                    stock_detlote,
+                    ventas_detlote,
+                    farreglo_detlote,
+                    disp_detlote,
+                    preciou_detlote,
+                    id_flor,
+                    id_lote
+                )
+                VALUES (
+                    v_stock,
+                    0,
+                    0,
+                    TRUE,
+                    v_precio_unit,
+                    v_flor_id,
+                    v_id_lote
+                );
+            END LOOP;
+        END IF;
+
+        --------------------------------------------------------------
+        -- 3) META DIARIA DESDE temp_ventas_totales
+        --------------------------------------------------------------
+        SELECT total_venta_estimado
+        INTO   v_meta_diaria
+        FROM   temp_ventas_totales
+        WHERE  fecha_dia = dia_actual;
+
+        IF v_meta_diaria IS NULL THEN
+            v_meta_diaria := 0;
+        END IF;
+
+        v_vendido_hoy := 0;
+
+        --------------------------------------------------------------
+        -- 4) CLIMA GENERAL DEL DÍA (para VIENTO FUERTE)
+        --------------------------------------------------------------
+        SELECT desc_clima
+        INTO   v_desc_clima
+        FROM   Clima
+        WHERE  fecha_clima = dia_actual
+        AND    hora_clima >= '12:00:00'
+        ORDER BY hora_clima
+        LIMIT  1;
+
+        v_es_viento_fuerte := (
+            v_desc_clima IS NOT NULL
+            AND v_desc_clima LIKE '%VIENTO FUERTE%'
+        );
+
+        --------------------------------------------------------------
+        -- 5) BUCLE DE VENTAS HORARIAS DEL DÍA
+        --------------------------------------------------------------
+        WHILE v_vendido_hoy < v_meta_diaria LOOP
+
+            -- 5.1) Hora aleatoria dentro del horario del local
+            v_hora_venta := v_hora_apertura
+                             + (random() * (v_hora_cierre - v_hora_apertura));
+
+            -- 5.2) Clima más cercano a esa hora
+            SELECT id_clima
+            INTO   v_clima_id
+            FROM   Clima
+            WHERE  fecha_clima = dia_actual
+            ORDER  BY ABS(EXTRACT(EPOCH FROM (hora_clima - v_hora_venta))) ASC
+            LIMIT  1;
+
+            -- 5.3) Elegir producto según viento
+            IF v_es_viento_fuerte AND random() < 0.8 THEN
+                -- Evitamos arreglos en viento fuerte
+                SELECT id_prod
+                INTO   v_producto_id
+                FROM   Producto
+                WHERE  cat_prod <> 'Arreglos'
+                ORDER  BY random()
+                LIMIT  1;
+
+                v_precio_prod := 15000; -- referencial producto pequeño
+            ELSE
+                SELECT id_prod
+                INTO   v_producto_id
+                FROM   Producto
+                ORDER  BY random()
+                LIMIT  1;
+
+                v_precio_prod := 25000; -- referencial arreglo o venta normal
+            END IF;
+
+            IF v_producto_id IS NULL THEN
+                SELECT id_prod
+                INTO   v_producto_id
+                FROM   Producto
+                ORDER  BY id_prod
+                LIMIT  1;
+
+                v_precio_prod := 20000;
+            END IF;
+
+            -- 5.4) Insertar VENTA
+            INSERT INTO Ventas (
+                fecha_ven,
+                hora_ven,
+                cantidad_ven,
+                total_ven,
+                descuento_ven,
+                boleta_ven,
+                desc_ven,
+                id_cli,
+                id_clima,
+                id_tipag
+            )
+            VALUES (
+                dia_actual,
+                v_hora_venta,
+                1,
+                v_precio_prod,
+                0,
+                'BOL-' || TO_CHAR(dia_actual, 'YYYYMMDD'),
+                'Venta simulada',
+                v_cli_id,
+                v_clima_id,
+                v_tipag_id
+            )
+            RETURNING id_ven INTO v_id_nueva_venta;
+
+            -- 5.5) Insertar DETALLE_VENTA
+            INSERT INTO Detalle_Ventas (
+                cant_detven,
+                preciou_detven,
+                precio_detven,
+                id_prod,
+                id_ven
+            )
+            VALUES (
+                1,
+                v_precio_prod,
+                v_precio_prod,
+                v_producto_id,
+                v_id_nueva_venta
+            );
+
+            -- 5.6) ACTUALIZAR STOCK EN DETALLE_LOTE (si hay stock asociado a esa flor)
+            SELECT id_flor
+            INTO   v_id_flor_prod
+            FROM   Producto
+            WHERE  id_prod = v_producto_id;
+
+            IF v_id_flor_prod IS NOT NULL THEN
+                SELECT dl.id_detlote
+                INTO   v_id_detlote
+                FROM   Detalle_Lote dl
+                JOIN   Lote l ON l.id_lote = dl.id_lote
+                WHERE  dl.id_flor = v_id_flor_prod
+                AND    dl.disp_detlote = TRUE
+                AND    dl.stock_detlote > 0
+                ORDER  BY l.fecha_lote ASC, dl.id_detlote
+                LIMIT  1;
+
+                IF v_id_detlote IS NOT NULL THEN
+                    UPDATE Detalle_Lote
+                    SET stock_detlote  = stock_detlote - 1,
+                        ventas_detlote = ventas_detlote + 1
+                    WHERE id_detlote = v_id_detlote;
+
+                    -- Si se acabó, marcar como no disponible
+                    UPDATE Detalle_Lote
+                    SET disp_detlote = FALSE
+                    WHERE id_detlote = v_id_detlote
+                    AND   stock_detlote <= 0;
+                END IF;
+            END IF;
+
+            -- 5.7) Actualizar total vendido del día
+            v_vendido_hoy := v_vendido_hoy + v_precio_prod;
+
+            -- Freno de seguridad
+            IF v_vendido_hoy > (v_meta_diaria * 1.10) THEN
+                EXIT;
+            END IF;
+        END LOOP; -- fin ventas del día
+
+        --------------------------------------------------------------
+        -- 6) MERMA: lo que quedó viejo (lote con más de 7 días)
+        --------------------------------------------------------------
+        FOR v_detlote_id, v_stock_restante, v_precio_unit_merma IN
+            SELECT dl.id_detlote,
+                   dl.stock_detlote,
+                   dl.preciou_detlote
+            FROM   Detalle_Lote dl
+            JOIN   Lote l ON l.id_lote = dl.id_lote
+            WHERE  dl.disp_detlote = TRUE
+            AND    dl.stock_detlote > 0
+            AND    l.fecha_lote <= dia_actual - 7
+        LOOP
+            INSERT INTO Merma(
+                fecha_mer,
+                cantidad_mer,
+                precio_mer,
+                id_catmer,
+                id_detlote
+            )
+            VALUES (
+                dia_actual,
+                v_stock_restante,
+                v_stock_restante * v_precio_unit_merma,
+                3,              -- 3 = 'Venció' según tus inserts
+                v_detlote_id
+            );
+
+            UPDATE Detalle_Lote
+            SET stock_detlote = 0,
+                disp_detlote  = FALSE
+            WHERE id_detlote = v_detlote_id;
+        END LOOP;
+
+        --------------------------------------------------------------
+        -- Siguiente día
+        --------------------------------------------------------------
+        dia_actual := dia_actual + 1;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+-- EJECUTAR SIMULACIÓN (ajusta fechas si quieres)
+SELECT simular_negocio_realista('2023-02-01', '2024-12-31');

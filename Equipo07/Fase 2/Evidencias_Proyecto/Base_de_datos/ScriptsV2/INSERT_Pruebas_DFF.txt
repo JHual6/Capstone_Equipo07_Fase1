@@ -1,0 +1,452 @@
+-- Clientes
+INSERT INTO Clientes(id_cli, nombre_cli, apellido_cli, correo_cli, numero_cli, direccion_cli, descuento_cli) 
+VALUES ('1', 'Predeterminado', '', '', NULL, NULL, 0);
+
+-- Clima
+INSERT INTO Clima(id_clima, fecha_clima, hora_clima, lluvia_clima, temperatura_clima, humedad_clima, desc_clima) 
+VALUES 
+(1, '01-02-2023', '10:00', false, 15.2, 65.0, 'Soleado'),
+(2, '01-02-2023', '11:00', false, 16.4, 61.0, 'Soleado'),
+(3, '01-02-2023', '12:00', false, 17.7, 57.0, 'Soleado'),
+(4, '01-02-2023', '13:00', false, 18.2, 56.0, 'Soleado'),
+(5, '01-02-2023', '14:00', false, 18.8, 56.0, 'Soleado'),
+(6, '01-02-2023', '15:00', false, 19.3, 55.0, 'Soleado'),
+(7, '01-02-2023', '16:00', false, 18.8, 57.0, 'Soleado'),
+(8, '01-02-2023', '17:00', false, 18.2, 59.0, 'Soleado'),
+
+(9, '02-02-2023', '10:00', true, 11, 89.0, 'Ligeras lluvias'),
+(10, '02-02-2023', '11:00', true, 10.6, 95.0, 'Ligeras lluvias'),
+(11, '02-02-2023', '12:00', true, 11.1, 95.0, 'Llovizna'),
+(12, '02-02-2023', '13:00', true, 12.4, 92.0, 'Ligeras precipitaciones'),
+(13, '02-02-2023', '14:00', true, 13.4, 87.0, 'Ligeras precipitaciones'),
+(14, '02-02-2023', '15:00', true, 14.3, 83.0, 'Ligeras precipitaciones'),
+(15, '02-02-2023', '16:00', true, 14.6, 80.0, 'Ligeras precipitaciones'),
+(16, '02-02-2023', '17:00', true, 15.1, 74.0, 'Lluvia moderada a intervalos'),
+
+(17, '03-02-2023', '10:00', false, 18.5, 71.0, 'Soleado'),
+(18, '03-02-2023', '11:00', false, 20.1, 66.0, 'Soleado'),
+(19, '03-02-2023', '12:00', false, 21.7, 61.0, 'Soleado'),
+(20, '03-02-2023', '13:00', false, 22.5, 59.0, 'Soleado'),
+(21, '03-02-2023', '14:00', false, 23.2, 57.0, 'Soleado'),
+(22, '03-02-2023', '15:00', false, 24.0, 55.0, 'Soleado'),
+(23, '03-02-2023', '16:00', false, 23.5, 58.0, 'Soleado'),
+(24, '03-02-2023', '17:00', false, 23.0, 60.0, 'Soleado'),
+
+(25, '04-02-2023', '10:00', false, 18.8, 71.0, 'Soleado'),
+(26, '04-02-2023', '11:00', false, 20.0, 66.0, 'Soleado'),
+(27, '04-02-2023', '12:00', false, 21.3, 21.8, 'Soleado'),
+(28, '04-02-2023', '13:00', false, 21.8, 59.0, 'Soleado'),
+(29, '04-02-2023', '14:00', false, 22.4, 56.0, 'Soleado'),
+(30, '04-02-2023', '15:00', false, 22.9, 53.0, 'Soleado'),
+(31, '04-02-2023', '16:00', false, 22.2, 56.0, 'Soleado'),
+(32, '04-02-2023', '17:00', false, 21.6, 58.0, 'Parcialmente nublado'),
+
+(33, '05-02-2023', '10:00', false, 17.4, 84.0, 'Cielo cubierto'),
+(34, '05-02-2023', '11:00', false, 18.3, 80.0, 'Nublado'),
+(35, '05-02-2023', '12:00', false, 19.2, 76.0, 'Nublado'),
+(36, '05-02-2023', '13:00', false, 19.1, 76.0, 'Nublado'),
+(37, '05-02-2023', '14:00', false, 19.1, 76.0, 'Nublado'),
+(38, '05-02-2023', '15:00', false, 19.0, 76.0, 'Nublado'),
+(39, '05-02-2023', '16:00', false, 19.0, 75.0, 'Nublado'),
+(40, '05-02-2023', '17:00', false, 18.9, 74.0, 'Parcialmente nublado'),
+
+(41, '06-02-2023', '10:00', false, 15.8, 63.0, 'Soleado'),
+(42, '06-02-2023', '11:00', false, 16.9, 58.0, 'Soleado'),
+(43, '06-02-2023', '12:00', false, 18.1, 52.0, 'Soleado'),
+(44, '06-02-2023', '13:00', false, 19.2, 51.0, 'Soleado'),
+(45, '06-02-2023', '14:00', false, 20.4, 49.0, 'Soleado'),
+(46, '06-02-2023', '15:00', false, 21.5, 48.0, 'Soleado'),
+(47, '06-02-2023', '16:00', false, 21.2, 50.0, 'Soleado'),
+(48, '06-02-2023', '17:00', false, 20.8, 53.0, 'Soleado'),
+
+(49, '07-02-2023', '10:00', false, 16.5, 65.0, 'Soleado'),
+(50, '07-02-2023', '11:00', false, 17.8, 60.0, 'Soleado'),
+(51, '07-02-2023', '12:00', false, 19.2, 54.0, 'Soleado'),
+(52, '07-02-2023', '13:00', false, 19.7, 53.0, 'Soleado'),
+(53, '07-02-2023', '14:00', false, 20.3, 52.0, 'Soleado'),
+(54, '07-02-2023', '15:00', false, 20.8, 51.0, 'Soleado'),
+(55, '07-02-2023', '16:00', false, 20.7, 53.0, 'Soleado'),
+(56, '07-02-2023', '17:00', false, 20.5, 55.0, 'Soleado');
+
+--Tipo Pago
+INSERT INTO tipo_pago(id_tipag, nombre_tipag)
+VALUES
+(1, 'Efectivo'),
+(2, 'Debito'),
+(3, 'Credito'),
+(4, 'Transferencia');
+
+--Categoria Arreglos
+INSERT INTO categoria_arreglo(id_catarr, nombre_catarr, desc_catarr, ancho_catarr, alto_catarr)
+VALUES 
+(1, 'Pequeño', 'Arreglo pequeño de 4500 pesos', 100, 100),
+(2, 'Mediano', 'Arreglo mediano de 9000 pesos', 250, 100),
+(3, 'Alto', 'Arreglo alto de 8000 pesos', 100, 250),
+(4, 'Grande', 'Arreglo grande de 25000 pesos', 500, 500),
+(5, 'Ancho', 'Arreglo ancho de 15000 pesos', 500, 250),
+(6, 'Canasto Mediano', 'Canasto mediano de 15000 pesos', 250, 250),
+(7, 'Canasto Pequeño', 'Canasto mediano de 15000', 150, 150),
+(8, 'Ramo', 'Ramo de flores arregladas', 0, 0),
+(9, 'Otro', 'Otros tipos de arreglos', 0, 0);
+
+-- Categoria Extra
+INSERT INTO categoria_extra(id_catext, nombre_catext, desc_catext)
+VALUES 
+(1, 'Diarios', 'Diarios el Llanquihue'),
+(2, 'Remolinos', 'Remolinos que se pueden colocar en la tierra'),
+(3, 'Decoraciones', 'Decoraciones que se pueden colocar en la tierra para que no vuelen'),
+(4, 'Mensajes', 'Corazones con mensajes para los seres queridos'),
+(5, 'Bebestibles', 'Bebestibles de máquina'),
+(6, 'Pañuelos', 'Pañuelos desechables');
+
+-- Categoria Merma
+INSERT INTO categoria_merma(id_catmer, nombre_catmer, desc_catmer)
+VALUES 
+(1, 'Regalo', 'Productos regalados para clientes frecuentes o ocaciones especiales'),
+(2, 'Arreglo', 'Productos ocupados para arreglos que no se cuenten en la creación de estos'),
+(3, 'Venció', 'Productos que ya se encuentran malos para la venta y se rompieron'), 
+(4, 'Rotos', 'Productos que se rompieron por un mal uso del personal o los clientes'),
+(5, 'Otros', 'Productos que no se pudieron vender por otros motivos'),
+(6, 'Pedidos', 'Productos que llegaron en mal estado o rotos en los pedidos');
+
+-- Lote
+INSERT INTO lote(id_lote, nombre_lote, color_lote, fecha_lote)
+VALUES 
+(1, 'Lote del 01-02-2023', 'Azul', '01-02-2023');
+
+-- Proveedor
+INSERT INTO proveedor(id_prov, nombre_prov, numero_prov, direccion_prov)
+VALUES
+(1, 'Florería Don Luis', 912121212, 'Serrano S/N');
+
+-- Categoria_Flores
+INSERT INTO categoria_flores(id_catflo, nombre_catflo, desc_catflo)
+VALUES
+(1, 'Rosas', 'Todo tipos de rosas, normalmente 2000 pesos cada una'),
+(2, 'Maules', 'Los maules se venden por paquete, normalmente 9000 el paquede de 10 maules'),
+(3, 'Claveles', 'Los claveles son muy delicados, normalmente se venden dos por 1500'),
+(4, 'Girasoles', 'Los girasoles se venden a 1500 cada uno normalmente'),
+(5, 'Ilusiones', 'Las ilusiones son delicadas, normalmente se vende a 1500 la varita'),
+(6, 'Gerberas', 'Son similares a los girasoles, pero más pequeños, normalmente a 1500 la ramita'),
+(7, 'Spiders', 'Tienen una mallita que se saca para que se vean como pompones, normalmente a 1500 cada uno'),
+(8, 'Liliums', 'Son muy delicados sus pétalos, normalmente se venden a 1500 los pequeños y los grandes a 2500'),
+(9, 'Leucalendron', 'Son muy resistentes, duraderas y se venden normalmente a 1500'),
+(10, 'Tulipanes', 'Todo tipos de colores de tulipanes, normalmente 1500 pesos cada uno'),
+(11, 'Limonium', 'El limonium sirve para complementar los arreglos florales'),
+(12, 'Otros', 'Flores sin categoría existente en este momento');
+
+-- Extras
+INSERT INTO extras(id_ext, nombre_ext, desc_ext, foto_ext, disponible_ext, precio_ext, cantidad_ext, cod_barras_ext, id_catext)
+VALUES
+(1, 'Mensaje en Corazón con Texto "TQM"', 'Corazón de goma eva rojo con texto de tqm', 'extras\gomaevacorazon.jpg', true, 1500, 16, '1234567890123', 4),
+(2, 'Estaca Funeraria', 'Estaca para cementerio, decoración para cementerio', 'extras\estacafuneraria.jpg', true, 1500, 48, '1534767885228', 3),
+(3, 'Estaca Halloween', 'Estaca para cementerio, decoración de halloween', 'extras\estacahalloween.jpg', true, 1500, 18, '1333764867231', 3),
+(4, 'Estaca Navidad', 'Estaca para cementerio, decoración de navidad', 'extras\estacanavidad.jpg', true, 1500, 24, '1534754267259', 3),
+(5, 'Diario Lunes', 'Diario del día Lunes, este se actualiza todos los Lunes', 'extras\diario.jpg', true, 500, 3, '1131714161211', 1),
+(6, 'Diario Martes', 'Diario del día Martes, este se actualiza todos los Martes', 'extras\diario.jpg', true, 500, 3, '1131714161212', 1),
+(7, 'Diario Miercoles', 'Diario del día Miercoles, este se actualiza todos los Miercoles', 'extras\diario.jpg', true, 500, 3, '1131714161213', 1),
+(8, 'Diario Jueves', 'Diario del día Jueves, este se actualiza todos los Jueves', 'extras\diario.jpg', true, 500, 3, '1131714161214', 1),
+(9, 'Diario Viernes', 'Diario del día Viernes, este se actualiza todos los Viernes', 'extras\diario.jpg', true, 500, 3, '1131714161215', 1),
+(10, 'Diario Sabado', 'Diario del día Sabado, este se actualiza todos los Sabado', 'extras\diario.jpg', true, 500, 3, '1131714161216', 1),
+(11, 'Diario Domingo', 'Diario del día Domingo, este se actualiza todos los Domingo', 'extras\diario.jpg', true, 500, 3, '1131714161217', 1),
+(12, 'Remolino Pequeño', 'Remolino Pequeño de estilo arcoíris', 'extras\remolinopequenoarcoiris.jpg', true, 1500, 10, '1235794861247', 2),
+(13, 'Remolino Grande', 'Remolino Grande de estilo arcoíris', 'extras\remolinograndearcoiris.jpg', true, 2500, 13, '1738794861726', 2),
+(14, 'Remolino Chileno', 'Remolino Mediano de estilo chileno', 'extras\remolinochileno.jpg', true, 2000, 7, '1637689671424', 2),
+(15, 'Mokaccino', 'Bebida Mokaccino de máquina servido en vaso de plástico', 'extras\mokaccino.jpg', true, 1000, 60, '1267619276494', 5),
+(16, 'Capuccino', 'Bebida Capuccino de máquina servido en vaso de plástico', 'extras\capuccino.jpg', true, 1000, 60, '1267619276495', 5),
+(17, 'Pañuelo Desechable', 'Pañuelo desechable de marca elite', 'extras\panuelo.jpg', true, 300, 40, '1687985766416', 6),
+(18, 'Null', 'Null', 'Null', false, 0, 0, 'Null', 5);
+
+-- Flores
+INSERT INTO flores(id_flor, nombre_flor, desc_flor, foto_flor, disponible_flor, color_flor, duracion_flor, precio_flor, cod_barras_flor, id_catflo)
+VALUES
+(1, 'Rosa', 'La Rosa roja dura entre 5 a 14 dias', 'flores\rosaroja.jpg', true, 'Rojo', 14, 2000, '1245432770496', 1),
+(2, 'Rosa', 'La Rosa rosada dura entre 5 a 7 dias', 'flores\rosarosada.jpg', true, 'Rosado', 7, 2000, '1245432770497', 1),
+(3, 'Rosa', 'La Rosa blanca dura entre 4 a 7 dias', 'flores\rosablanca.jpg', true, 'Blanco', 7, 2000, '1245432770498', 1),
+(4, 'Rosa', 'La Rosa azul dura entre 3 a 10 dias', 'flores\rosaazul.jpg', true, 'Azul', 10, 2000, '1245432770499', 1),
+(5, 'Maule', 'Los maules amarillos duran entre 5 a 12 dias', 'flores\mauleamarillo.jpg', true, 'Amarillo', 12, 900, '1245506370914', 2),
+(6, 'Maule', 'Los maules blancos duran entre 7 a 10 dias', 'flores\mauleblanco.jpg', true, 'Blanco', 10, 900, '1245506370915', 2),
+(7, 'Maule', 'Los maules morado duran entre 5 a 12 dias', 'flores\maulemorado.jpg', true, 'Morado', 12, 900, '1245506370916', 2),
+(8, 'Maule', 'Los maules rosado duran entre 7 a 14 dias', 'flores\maulerosado.jpg', true, 'Rosado', 14, 900, '1245506370917', 2),
+(9, 'Maule', 'Los maules verde duran entre 7 a 10 dias', 'flores\mauleverde.jpg', true, 'Verde', 10, 900, '1245506370918', 2),
+(10, 'Claveles', 'Los claveles blancos duran entre una a tres semanas, estos se deben manejar con mucho cuidado', 'flores\clavelblanco.jpg', true, 'Blanco', 21, 750, '1297826371414', 3),
+(11, 'Claveles', 'Los claveles crema duran entre una a tres semanas, estos se deben manejar con mucho cuidado', 'flores\clavelcrema.jpg', true, 'Crema', 21, 750, '1297826371415', 3),
+(12, 'Claveles', 'Los claveles rojos duran entre 10 a 21 dias, estos se deben manejar con mucho cuidado', 'flores\clavelrojo.jpg', true, 'Rojo', 21, 750, '1297826371416', 3),
+(13, 'Claveles', 'Los claveles rosados duran entre 10 a 21 dias, estos se deben manejar con mucho cuidado', 'flores\clavelrosado.jpg', true, 'Rosado', 21, 750, '1297826371417', 3),
+(14, 'Girasol', 'Los girasoles duran entre 6 y 12 dias, estos se deben trabajar con cuidado', 'flores\girasol.jpg', true, 'Amarillo', 12, 1500, '1248821051645', 4),
+(15, 'Ilusiones', 'Las ilusiones blancas duran entre 5 a 21 días, estas se deben manejar con cuidado', 'flores\ilusiones.jpg', true, 'Blanco', 21, 1500, '1280584701465', 5),
+(16, 'Gerbera', 'Las gerberas amarillas duran entre 6 a 14 días, estas son similares a los girasoles', 'flores\gerberaamarilla.jpg', true, 'Amarillo', 14, 1500, '1268961501405', 6),
+(17, 'Gerbera', 'Las gerberas naranjas duran entre 6 a 14 días, estas son similares a los girasoles', 'flores\gerberanaranja.jpg', true, 'Naranjo', 14, 1500, '1268961501406', 6),
+(18, 'Gerbera', 'Las gerberas rojas duran entre 6 a 10 días, estas son similares a los girasoles', 'flores\gerberaroja.jpg', true, 'Rojo', 14, 1500, '1268961501407', 6),
+(19, 'Spiders', 'Los spiders blancos duran entre 7 a 14 días, estos se deben manejar con cuidado y tienen una mallita la cual se debe sacar para ver bien la flor', 'flores\spiderblanco.jpg', true, 'Blanco', 14, 1500, '1295067541400', 7),
+(20, 'Lilliums', 'Los lilliums blancos duran entre 10 a 14 días, estos se deben manejar con cuidado ya que sus pétalos son delicados', 'flores\lilliumblanco.jpg', true, 'Blanco', 14, 1500, '1267260571136', 8),
+(21, 'Lilliums', 'Los lilliums rojos duran entre 7 a 14 días, estos se deben manejar con cuidado ya que sus pétalos son delicados', 'flores\lilliumrojo.jpg', true, 'Rojo', 14, 1500, '1267260571137', 8),
+(22, 'Lilliums', 'Los lilliums rosados duran entre 10 a 14 días, estos se deben manejar con cuidado ya que sus pétalos son delicados', 'flores\lilliumrosado.jpg', true, 'Rosado', 14, 1500, '1267260571138', 8),
+(23, 'Leucalendron', 'Los leucalendrones pueden llegar a durar entre 30 a 40 días', 'flores\lilliumblanco.jpeg', true, 'Verde', 40, 1500, '1256368765434', 9),
+(24, 'Rosa', 'La Rosa amarilla dura entre 7 a 10 dias', 'flores\rosaamarilla.jpg', true, 'Amarillo', 10, 2000, '1247472870606', 1),
+(25, 'Tulipan', 'La Rosa roja dura entre 5 a 10 dias', 'flores\tulipanrojo.jpg', true, 'Rojo', 10, 1500, '1745362750306', 10),
+(26, 'Clavel', 'Los claveles bicolor morado/blanco duran entre 7 a 14 dias, estos se deben manejar con mucho cuidado', 'flores\clavelblancomorado.jpg', true, 'Blanco/Morado', 14, 750, '1245432770496', 3),
+(27, 'Maule', 'Los maules rojos duran entre 7 a 14 dias', 'flores\maulerojo.jpg', true, 'Rojo', 14, 900, '1245506370919', 2),
+(28, 'Limonium', 'El limonium morado puede durar unos 14 días, pero una vez seco puede llegar a conservarse meses', 'flores\limoniummorado.jpg', true, 'Morado', 14, 1500, '1293362875562', 11),
+(29, 'Null', 'Null', 'Null', false, 'Null', 0, 0, '0000000000000', 12);
+
+--Arreglos
+INSERT INTO arreglos(id_arr, nombre_arr, desc_arr, foto_arr, 
+disponible_arr, precio_arr, cantidad_arr, id_catarr)
+VALUES
+(1, 'Arreglo Alto con Rosa Amarillo y Spiders Blanco', 'Arreglo alto con 2 rosas amarilla, 2 spiders blancos, maule blanco y amarillo, se encuentra envuelto', 'arreglos/ArregloAltoRosaAmarilloSpidersBlanco.jpeg', true, 20000, 1, 3),
+(2, 'Arreglo Canasto Pequeño con Tulipan Rojo y Leucalendron Verde', 'Arreglo floral en canasto pequeño con tulipanes rojo, leucalendrón verde, maules y claveles', 'arreglos/ArregloCanastoPequeñoTulipanRojoLeucalendronVerde.jpeg', true, 14000, 1, 7),
+(3, 'Arreglo Mediano con Girasol Amarillo y Maule Amarillo', 'Arreglo mediano con girasoles amarillos, maule blanco y amarillo', 'arreglos/ArregloMedianoGirasolAmarilloMauleAmarillo.jpeg', true, 9000, 2, 2),
+(4, 'Arreglo Mediano con Rosa Rojo y Maule Rojo', 'Arreglo mediano con rosas rojas y maule rojo', 'arreglos/ArregloMedianoRosaRojoMauleRojo.jpeg', true, 9000, 3, 2),
+(5, 'Arreglo Pequeño con Gerbera Rojo y Maule Rojo', 'Arreglo pequeño con gerbera roja y maule rojo', 'arreglos/ArregloPequeñoGerberaRojoMauleRojo.jpeg', true, 4500, 2, 1),
+(6, 'Arreglo Pequeño con Rosa Blanco y Maule Blanco', 'Arreglo pequeño con rosa blanca y maule blanco', 'arreglos/ArregloPequeñoRosaBlancoMauleBlanco.jpeg', true, 4500, 2, 1),
+(7, 'Canasto Mediano con Rosa Rosa y Tulipan Rosa', 'Arreglo floral de canasto mediano con rosa roja, tulipán rosado y claveles', 'arreglos/CanastoMedianoRosaRosaTulipanRosa.jpeg', true, 22000, 1, 6),
+(8, 'Ramo con Tulipan Rosa y Gerbera Rojo', 'Ramo de flores arregladas con tulipanes rosas, gerberas rojas y maule blanco', 'arreglos/RamoTulipanRosaGerberaRojo.jpeg', true, 12000, 1, 8),
+(9, 'Arreglo Mediano con Rosa Blanco y Maule Blanco', 'Arreglo mediano de rosa blanca y maule blanco', 
+'arreglos/ArregloMedianoRosaBlancoMauleBlanco.jpeg', true, 9000, 2, 2),
+(10, 'Arreglo Pequeño con Clavel Blanco-Morado y Maule Blanco', 'Arreglo pequeño de clavel bicolor blanco con morado y maule blanco', 
+'arreglos/ArregloPequeñoClavelBlanco-MoradoMauleBlanco.jpeg', true, 4500, 1, 1),
+(11, 'Arreglo Mediano con Rosa Rojo y Maule Blanco', 'Arreglo mediano de rosa roja con maule blanco', 
+'arreglos/ArregloMedianoRosaRojoMauleBlanco.jpeg', true, 9000, 3, 2),
+(12, 'Arreglo Ancho con Rosa Blanco y Lilliums Blanco', 'Arreglo ancho con rosas blancas y lilliums blancos, limonium, maule blanco y ilusiones', 'arreglos/ArregloAnchoRosaBlancoLilliumsBlanco.jpeg', true, 23000, 1, 5),
+(13, 'Null', 'Null', 'Null', false, 0, 0, 9);
+
+-- Compras
+INSERT INTO compras(id_comp, fecha_comp, cantidad_comp, precio_comp, color_lote_comp, id_prov)
+VALUES
+(1, '01-02-2023', 26, 292000, 'Azul', 1);
+
+-- Detalle Compras
+INSERT INTO detalle_compras(id_detcom, cant_paq_flores_detcom,
+cant_paq_detcom, cant_paq_defecto_detcom, precio_paq_detcom, id_flor, id_comp)
+VALUES
+(1, 25, 2, 3, 22000, 1, 1),
+(2, 25, 1, 1, 22000, 2, 1),
+(3, 25, 2, 4, 22000, 3, 1),
+(4, 10, 3, 0, 6000, 5, 1),
+(5, 10, 3, 0, 6000, 6, 1),
+(6, 10, 1, 0, 6000, 7, 1),
+(7, 10, 1, 0, 6000, 8, 1),
+(8, 25, 2, 3, 7000, 10, 1),
+(9, 25, 2, 4, 7000, 12, 1),
+(10, 10, 1, 0, 10000, 14, 1),
+(11, 25, 2, 0, 18000, 15, 1),
+(12, 25, 1, 1, 10000, 17, 1),
+(13, 10, 1, 1, 10000, 18, 1),
+(14, 10, 1, 0, 8000, 19, 1),
+(15, 10, 1, 0, 12000, 20, 1),
+(16, 10, 1, 0, 12000, 22, 1),
+(17, 10, 1, 0, 8000, 23, 1);
+
+-- Detalle Lote
+INSERT INTO detalle_lote(id_detlote, stock_detlote, ventas_detlote, farreglo_detlote, disp_detlote, preciou_detlote, id_flor, id_lote)
+VALUES
+(1, 47, 0, 0, true, 2000, 1, 1),
+(2, 24, 0, 0, true, 2000, 2, 1),
+(3, 46, 0, 0, true, 2000, 3, 1),
+(4, 30, 0, 0, true, 900, 5, 1),
+(5, 30, 0, 0, true, 900, 6, 1),
+(6, 10, 0, 0, true, 900, 7, 1),
+(7, 10, 0, 0, true, 900, 8, 1),
+(8, 47, 0, 0, true, 750, 10, 1),
+(9, 46, 0, 0, true, 750, 12, 1),
+(10, 10, 0, 0, true, 1500, 14, 1),
+(11, 50, 0, 0, true, 1500, 15, 1),
+(12, 9, 0, 0, true, 1500, 17, 1),
+(13, 9, 0, 0, true, 1500, 18, 1),
+(14, 10, 0, 0, true, 1500, 19, 1),
+(15, 10, 0, 0, true, 1500, 20, 1),
+(16, 10, 0, 0, true, 1500, 22, 1),
+(17, 10, 0, 0, true, 1500, 23, 1);
+
+-- Tipo Detalle
+INSERT INTO Tipo_Detalle(id_tipdet, nombre_tipdet, desc_tipdet)
+VALUES
+(1, 'Principal', 'La flor principal de los arreglos es la más llamativa o la que se encuentra en mayor cantidad'),
+(2, 'Secundaria', 'La flor segundaria de los arreglos son la segunda más llamativa o la segunda que se encuentra en mayor cantidad'),
+(3, 'Complementario', 'Las flores complementarias son las otras flores que llevan los arreglos, tales como flores acompañantes');
+
+-- Detalle Arreglo
+INSERT INTO detalle_arreglo(id_detarr, cant_detarr, id_tipdet, id_flor, id_arr)
+VALUES
+(1, 3, 1, 24, 1),
+(2, 2, 2, 19, 1),
+(3, 1, 3, 5, 1),
+(4, 1, 3, 6, 1),
+(5, 2, 3, 15, 1),
+
+(6, 3, 1, 25, 2),
+(7, 2, 2, 23, 2),
+(8, 2, 3, 26, 2),
+(9, 1, 3, 6, 2),
+(10, 1, 3, 27, 2),
+(11, 2, 3, 15, 2),
+
+(12, 3, 1, 14, 3),
+(13, 1, 2, 5, 3),
+(14, 1, 3, 6, 3),
+(15, 1, 3, 15, 3),
+
+(16, 3, 1, 1, 4),
+(17, 2, 2, 27, 4),
+(18, 1, 3, 15, 4),
+
+(19, 1, 1, 18, 5),
+(20, 1, 2, 27, 5),
+(21, 1, 3, 15, 5),
+
+(22, 1, 1, 3, 6),
+(23, 1, 2, 6, 6),
+(24, 1, 3, 15, 6),
+
+(25, 2, 1, 2, 7),
+(26, 2, 2, 25, 7),
+(27, 1, 3, 1, 7),
+(28, 2, 3, 6, 7),
+(29, 1, 3, 12, 7),
+(30, 2, 3, 15, 7),
+
+(31, 2, 1, 18, 8),
+(32, 2, 2, 25, 8),
+(33, 1, 3, 6, 8),
+(34, 2, 3, 15, 8),
+
+(35, 3, 1, 3, 9),
+(36, 2, 2, 6, 9),
+(37, 2, 3, 15, 9),
+
+(38, 1, 1, 26, 10),
+(39, 1, 2, 6, 10),
+(40, 1, 3, 15, 10),
+
+(41, 3, 1, 1, 11),
+(42, 2, 2, 6, 11),
+(43, 1, 3, 15, 11),
+
+(44, 5, 1, 3, 12),
+(45, 2, 2, 20, 12),
+(46, 2, 3, 6, 12),
+(47, 2, 3, 28, 12),
+(48, 2, 3, 15, 12);
+
+-- Merma
+INSERT INTO merma(id_mer, fecha_mer, cantidad_mer, precio_mer, id_catmer, id_detlote)
+VALUES
+(1, '01-02-2023', 3, 6000, 3, 1),
+(2, '01-02-2023', 1, 2000, 4, 2),
+(3, '01-02-2023', 4, 8000, 4, 3),
+(4, '01-02-2023', 5, 3750, 4, 8),
+(5, '01-02-2023', 6, 4500, 4, 9),
+(6, '01-02-2023', 1, 1500, 4, 12),
+(7, '01-02-2023', 1, 1500, 4, 13),
+
+(8, '02-02-2023', 1, 2000, 2, 3),
+(9, '02-02-2023', 1, 750, 4, 8),
+(10, '02-02-2023', 1, 750, 4, 9),
+(11, '02-02-2023', 2, 3000, 2, 11),
+
+(12, '03-02-2023', 1, 2000, 2, 3),
+(13, '03-02-2023', 2, 1500, 4, 8),
+(14, '03-02-2023', 2, 1500, 4, 9),
+(15, '03-02-2023', 1, 1500, 2, 11),
+(16, '03-02-2023', 1, 1500, 4, 15),
+(17, '03-02-2023', 1, 1500, 4, 16),
+
+(18, '04-02-2023', 1, 2000, 2, 1),
+(19, '04-02-2023', 1, 750, 4, 8),
+
+(20, '05-02-2023', 1, 2000, 4, 3),
+(21, '05-02-2023', 2, 1500, 4, 9),
+(22, '05-02-2023', 2, 3000, 2, 11),
+
+(23, '06-02-2023', 2, 4000, 3, 1),
+(24, '06-02-2023', 1, 750, 4, 8),
+(25, '06-02-2023', 1, 1500, 3, 10),
+(26, '06-02-2023', 1, 1500, 2, 11),
+(27, '06-02-2023', 1, 1500, 4, 16),
+
+(28, '07-02-2023', 1, 2000, 4, 1),
+(29, '07-02-2023', 2, 4000, 3, 3),
+(30, '07-02-2023', 2, 1500, 4, 8),
+(31, '07-02-2023', 3, 2250, 4, 9),
+(32, '07-02-2023', 1, 1500, 3, 10),
+(33, '07-02-2023', 1, 1500, 2, 11),
+(34, '07-02-2023', 1, 1500, 4, 15);
+
+-- Producto
+INSERT INTO producto(id_prod, nomb_prod, cat_prod, id_flor, id_ext, id_arr)
+VALUES
+(1, 'Rosa Rojo', 'Flores', 1, 18, 13),
+(2, 'Rosa Rosado', 'Flores', 2, 18, 13),
+(3, 'Rosa Blanco', 'Flores', 3, 18, 13),
+(4, 'Rosa Azul', 'Flores', 4, 18, 13),
+(5, 'Maule Amarillo', 'Flores', 5, 18, 13),
+(6, 'Maule Blanco', 'Flores', 6, 18, 13),
+(7, 'Maule Morado', 'Flores', 7, 18, 13),
+(8, 'Maule Rosado', 'Flores', 8, 18, 13),
+(9, 'Maule Verde', 'Flores', 9, 18, 13),
+(10, 'Claveles Blanco', 'Flores', 10, 18, 13),
+(11, 'Claveles Crema', 'Flores', 11, 18, 13),
+(12, 'Claveles Rojo', 'Flores', 12, 18, 13),
+(13, 'Claveles Rosado', 'Flores', 13, 18, 13),
+(14, 'Girasol Amarillo', 'Flores', 14, 18, 13),
+(15, 'Ilusiones Blanco', 'Flores', 15, 18, 13),
+(16, 'Gerbera Amarillo', 'Flores', 16, 18, 13),
+(17, 'Gerbera Naranjo', 'Flores', 17, 18, 13),
+(18, 'Gerbera Rojo', 'Flores', 18, 18, 13),
+(19, 'Spiders Blanco', 'Flores', 19, 18, 13),
+(20, 'Lilliums Blanco', 'Flores', 20, 18, 13),
+(21, 'Lilliums Rojo', 'Flores', 21, 18, 13),
+(22, 'Lilliums Rosado', 'Flores', 22, 18, 13),
+(23, 'Leucalendron Verde', 'Flores', 23, 18, 13),
+(24, 'Rosa Amarillo', 'Flores', 24, 18, 13),
+(25, 'Tulipan Rojo', 'Flores', 25, 18, 13),
+(26, 'Clavel Blanco-Morado', 'Flores', 26, 18, 13),
+(27, 'Maule Rojo', 'Flores', 27, 18, 13),
+(28, 'Limonium Morado', 'Flores', 28, 18, 13),
+
+(29, 'Mensaje en Corazón con Texto "TQM"', 'Extras', 29, 1, 13),
+(30, 'Estaca Funeraria', 'Extras', 29, 2, 13),
+(31, 'Estaca Halloween', 'Extras', 29, 3, 13),
+(32, 'Estaca Navidad', 'Extras', 29, 4, 13),
+(33, 'Diario Lunes', 'Extras', 29, 5, 13),
+(34, 'Diario Martes', 'Extras', 29, 6, 13),
+(35, 'Diario Miercoles', 'Extras', 29, 7, 13),
+(36, 'Diario Jueves', 'Extras', 29, 8, 13),
+(37, 'Diario Viernes', 'Extras', 29, 9, 13),
+(38, 'Diario Sabado', 'Extras', 29, 10, 13),
+(39, 'Diario Domingo', 'Extras', 29, 11, 13),
+(40, 'Remolino Pequeño', 'Extras', 29, 12, 13),
+(41, 'Remolino Grande', 'Extras', 29, 13, 13),
+(42, 'Remolino Chileno', 'Extras', 29, 14, 13),
+(43, 'Mokaccino', 'Extras', 29, 15, 13),
+(44, 'Capuccino', 'Extras', 29, 16, 13),
+(45, 'Pañuelo Desechable', 'Extras', 29, 17, 13),
+
+(46, 'Arreglo Alto con Rosa Amarillo y Spiders Blanco', 'Arreglos', 29, 18, 1),
+(47, 'Arreglo Canasto Pequeño con Tulipan Rojo y Leucalendron Verde', 'Arreglos', 29, 18, 2),
+(48, 'Arreglo Mediano con Girasol Amarillo y Maule Amarillo', 'Arreglos', 29, 18, 3),
+(49, 'Arreglo Mediano con Rosa Rojo y Maule Rojo', 'Arreglos', 29, 18, 4),
+(50, 'Arreglo Pequeño con Gerbera Rojo y Maule Rojo', 'Arreglos', 29, 18, 5),
+(51, 'Arreglo Pequeño con Rosa Blanco y Maule Blanco', 'Arreglos', 29, 18, 6),
+(52, 'Canasto Mediano con Rosa Rosa y Tulipan Rosa', 'Arreglos', 29, 18, 7),
+(53, 'Ramo con Tulipan Rosa y Gerbera Rojo', 'Arreglos', 29, 18, 8),
+(54, 'Arreglo Mediano con Rosa Blanco y Maule Blanco', 'Arreglos', 29, 18, 9),
+(55, 'Arreglo Pequeño con Clavel Blanco-Morado y Maule Blanco', 'Arreglos', 29, 18, 10),
+(56, 'Arreglo Mediano con Rosa Rojo y Maule Blanco', 'Arreglos', 29, 18, 11),
+(57, 'Arreglo Ancho con Rosa Blanco y Lilliums Blanco', 'Arreglos', 29, 18, 12);
+
+-- Ventas
+--EN SCRIPT INSERT-Pruebas-VentasGenerados
+-- Detalle Ventas
+--EN SCRIPT INSERT-Pruebas-VentasGenerados
+-- Velorios
+INSERT INTO velorios(id_velorio, fecha_velorio, cantidad_velorio) 
+VALUES
+(1, '2023-02-01', 1),
+(2, '2023-02-02', 0),
+(3, '2023-02-03', 2),
+(4, '2023-02-04', 0),
+(5, '2023-02-05', 0),
+(6, '2023-02-06', 0),
+(7, '2023-02-07', 0);

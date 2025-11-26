@@ -1,0 +1,120 @@
+/* SCRIPT 5 - VERSIÓN "FÓRMULA PROGRESIVA"
+   Lógica general:
+   - meta_base según día de la semana
+   - ajuste por clima (lluvia / viento fuerte)
+   - posible suma extra por velorios
+   - pequeño ruido aleatorio para que no sea tan cuadrado
+*/
+
+CREATE OR REPLACE FUNCTION generar_objetivos_inteligentes(fecha_inicio DATE, fecha_fin DATE)
+RETURNS VOID AS $$
+DECLARE
+    dia_actual      DATE := fecha_inicio;
+    
+    -- Lógica de negocio
+    dia_semana      INT;
+    es_fin_semana   BOOLEAN;
+    meta_base       INT;
+    meta_final      INT;
+    factor_clima    DECIMAL(4,2);
+    
+    -- Velorios
+    hay_velorio     BOOLEAN;
+    monto_velorio   INT;
+    
+    -- Clima
+    v_lluvia        BOOLEAN;
+    v_desc          TEXT;
+BEGIN
+    -- Asegurarnos de que la tabla temporal existe (por si acaso)
+    CREATE TEMPORARY TABLE IF NOT EXISTS temp_ventas_totales (
+        fecha_dia DATE PRIMARY KEY,
+        total_venta_estimado INT NOT NULL
+    );
+
+    -- Limpiar datos anteriores
+    TRUNCATE TABLE temp_ventas_totales;
+    TRUNCATE TABLE Velorios RESTART IDENTITY CASCADE;
+
+    WHILE dia_actual <= fecha_fin LOOP
+        dia_semana    := EXTRACT(DOW FROM dia_actual); -- 0 = domingo, 6 = sábado
+        es_fin_semana := (dia_semana = 0 OR dia_semana = 6);
+
+        ------------------------------------------------------------------
+        -- 1) META BASE SEGÚN DÍA DE LA SEMANA
+        ------------------------------------------------------------------
+        IF dia_semana BETWEEN 1 AND 4 THEN        -- Lunes a jueves
+            meta_base := 30000 + FLOOR(random() * 30000);   -- 30k a 60k
+        ELSIF dia_semana = 5 THEN                 -- Viernes
+            meta_base := 50000 + FLOOR(random() * 30000);   -- 50k a 80k
+        ELSE                                      -- Sábado y domingo
+            meta_base := 90000 + FLOOR(random() * 60000);   -- 90k a 150k
+            -- Algunos días muy buenos
+            IF random() < 0.10 THEN 
+                meta_base := 200000; 
+            END IF;
+        END IF;
+
+        ------------------------------------------------------------------
+        -- 2) AJUSTE POR CLIMA (lluvia / viento fuerte)
+        ------------------------------------------------------------------
+        SELECT lluvia_clima, desc_clima
+        INTO   v_lluvia, v_desc
+        FROM   Clima
+        WHERE  fecha_clima = dia_actual
+        AND    hora_clima >= '12:00:00'
+        LIMIT  1;
+
+        factor_clima := 1.0;
+
+        IF v_lluvia IS TRUE THEN
+            IF es_fin_semana THEN
+                factor_clima := 0.6;   -- Fin de semana con lluvia: baja 40%
+            ELSE
+                factor_clima := 0.2;   -- Semana con lluvia: baja 80%
+            END IF;
+        ELSIF v_desc IS NOT NULL AND v_desc LIKE '%VIENTO FUERTE%' THEN
+            factor_clima := 0.7;       -- Viento fuerte castiga un poco
+        END IF;
+
+        meta_final := (meta_base * factor_clima)::INT;
+
+        ------------------------------------------------------------------
+        -- 3) VELORIOS (evento externo que suma ventas)
+        ------------------------------------------------------------------
+        hay_velorio := (random() < 0.28);  -- aprox 2 veces por semana
+
+        IF hay_velorio THEN
+            monto_velorio := 40000 + FLOOR(random() * 80000);   -- 40k a 120k
+            meta_final    := meta_final + monto_velorio;
+
+            INSERT INTO Velorios (fecha_velorio, cantidad_velorio)
+            VALUES (dia_actual, 1);
+        ELSE
+            INSERT INTO Velorios (fecha_velorio, cantidad_velorio)
+            VALUES (dia_actual, 0);
+        END IF;
+
+        ------------------------------------------------------------------
+        -- 4) PEQUEÑO RUIDO ALEATORIO + PISO MÍNIMO
+        ------------------------------------------------------------------
+        meta_final := (meta_final * (0.95 + random() * 0.10))::INT;  -- ±5%
+
+        IF meta_final < 5000 THEN
+            meta_final := 5000;
+        END IF;
+
+        ------------------------------------------------------------------
+        -- 5) GUARDAR OBJETIVO DEL DÍA EN LA TEMPORAL
+        ------------------------------------------------------------------
+        INSERT INTO temp_ventas_totales (fecha_dia, total_venta_estimado)
+        VALUES (dia_actual, meta_final);
+
+        -- Siguiente día
+        dia_actual := dia_actual + 1;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Ejecutar el generador en el rango que quieras (ejemplo)
+SELECT generar_objetivos_inteligentes('2023-02-01', '2024-12-31');

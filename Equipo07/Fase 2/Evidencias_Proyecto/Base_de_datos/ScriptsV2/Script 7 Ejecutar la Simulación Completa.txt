@@ -1,0 +1,21 @@
+/* SCRIPT 7: EXPORTAR DATASET HORARIO PARA ML
+   - Une Ventas + Clima + Velorios
+   - Nivel de detalle: una fila por boleta (hora específica)
+   - Este resultado es el que se pasa a CSV para entrenar el modelo
+*/
+
+-- Consulta base (puedes ejecutarla sola para ver cómo se ve)
+SELECT
+    v.total_ven,
+    v.fecha_ven,
+    c.hora_clima,
+    c.lluvia_clima,
+    c.temperatura_clima,
+    c.humedad_clima,
+    c.desc_clima,
+    COALESCE(vel.cantidad_velorio, 0) AS cantidad_velorio
+FROM Ventas   v
+INNER JOIN Clima     c   ON c.id_clima = v.id_clima
+LEFT  JOIN Velorios  vel ON vel.fecha_velorio = v.fecha_ven
+WHERE v.fecha_ven BETWEEN DATE '2023-02-01' AND DATE '2024-12-31'
+ORDER BY v.fecha_ven, c.hora_clima;
